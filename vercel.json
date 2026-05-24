@@ -4,14 +4,8 @@
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": null,
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "edge"
-    }
-  },
   "rewrites": [
-    { "source": "/api/notion/load-page", "destination": "/api/notion/load-page" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
