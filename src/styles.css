@@ -48,6 +48,15 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
+  /* 디자인 토큰 */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-paper: #fafaf8;
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #6b6b6b;
+  --spacing-page: 80px;
+  --spacing-section: 48px;
 }
 
 .dark {
@@ -77,7 +86,218 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+
+/* ── Notion 콘텐츠 스타일 ── */
+.notion-content {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+
+.notion-page-title {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+.notion-h1 {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  margin-top: 40px;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.notion-h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-top: 32px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.notion-h3 {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-top: 24px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.notion-text {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-ink);
+  margin-bottom: 12px;
+}
+
+.notion-bulleted-list {
+  list-style-type: disc;
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.notion-bulleted-list li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-ink);
+  margin-bottom: 4px;
+}
+
+.notion-numbered-list {
+  list-style-type: decimal;
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.notion-numbered-list li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-ink);
+  margin-bottom: 4px;
+}
+
+.notion-quote {
+  border-left: 4px solid var(--color-ink);
+  padding-left: 16px;
+  margin: 16px 0;
+  font-style: italic;
+  color: var(--color-ink-muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.notion-code {
+  background-color: #f5f5f4;
+  border: 1px solid #e7e5e4;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.notion-code code {
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--color-ink);
+  white-space: pre;
+}
+
+.notion-callout {
+  display: flex;
+  gap: 12px;
+  background-color: #f5f5f4;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+
+.notion-callout-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  line-height: 1.7;
+}
+
+.notion-image {
+  margin: 16px 0;
+}
+
+.notion-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.notion-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+/* ── A4 카드 ── */
+.a4-card {
+  background-color: #ffffff;
+  min-height: 1123px; /* A4 96dpi */
+}
+
+/* ── 인쇄 CSS ── */
+@media print {
+  /* UI 요소 숨김 */
+  .no-print {
+    display: none !important;
+  }
+
+  /* 페이지 설정 */
+  @page {
+    size: A4;
+    margin: 20mm 25mm;
+  }
+
+  /* 루트 배경 제거 */
+  body {
+    background-color: #ffffff !important;
+  }
+
+  /* A4 카드만 표시 */
+  #print-area {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-after: avoid;
+  }
+
+  /* 페이지 번호 counter */
+  #print-area::after {
+    content: '';
+    display: block;
+    counter-reset: page;
+  }
+
+  /* 페이지 번호 하단 중앙 */
+  @page {
+    @bottom-center {
+      content: counter(page);
+      font-family: var(--font-sans);
+      font-size: 10pt;
+      color: #6b6b6b;
+    }
+  }
+
+  /* 페이지 분리 힌트 */
+  .notion-h1,
+  .notion-h2 {
+    page-break-after: avoid;
+  }
+
+  .notion-text,
+  .notion-bulleted-list,
+  .notion-numbered-list {
+    page-break-inside: avoid;
   }
 }

@@ -1,37 +1,58 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
-import { useCounterStore } from '@/stores/counter-store';
-import { env } from '@/env';
+import { UrlInputForm } from '@/components/notion/url-input-form';
+import { LoadingSpinner } from '@/components/notion/loading-spinner';
+import { PreviewPanel } from '@/components/notion/preview-panel';
+import { useNotionConversion } from '@/hooks/use-notion-conversion';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 });
 
 function HomePage() {
-  const { count, increment, decrement, reset } = useCounterStore();
+  const { status, pageData, isConverting, startConversion, reset } =
+    useNotionConversion();
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">{env.VITE_APP_NAME}</h1>
-        <p className="text-muted-foreground text-sm">
-          React + Vite + TanStack Router/Query + Zustand + shadcn
+    <div className="flex min-h-screen flex-col items-center w-full">
+      {/* 헤더 영역 — 인쇄 시 숨김 */}
+      <section
+        className="no-print flex flex-col items-center text-center gap-4 w-full py-20"
+        style={{ paddingBottom: 'var(--spacing-section)' }}
+      >
+        <h1
+          className="text-5xl font-bold tracking-tight"
+          style={{ fontFamily: 'var(--font-serif)', letterSpacing: '-0.02em' }}
+        >
+          Notion to PDF
+        </h1>
+        <p
+          className="text-lg text-muted-foreground max-w-md"
+          style={{ fontFamily: 'var(--font-sans)' }}
+        >
+          Notion 공개 페이지 URL을 입력하면 세련된 PDF를 즉시 만들어 드립니다.
         </p>
-      </header>
+      </section>
 
-      <div className="border rounded-lg p-6 space-y-4">
-        <p className="text-sm text-muted-foreground">Zustand 카운터 데모</p>
-        <p className="text-5xl font-mono">{count}</p>
-        <div className="flex gap-2">
-          <Button onClick={increment}>+1</Button>
-          <Button variant="secondary" onClick={decrement}>
-            -1
-          </Button>
-          <Button variant="ghost" onClick={reset}>
-            reset
-          </Button>
+      {/* 입력 폼 — 미리보기 상태가 아닐 때, 인쇄 시 숨김 */}
+      {status !== 'success' && (
+        <section className="no-print w-full max-w-2xl px-4">
+          <UrlInputForm isLoading={isConverting} onSubmit={startConversion} />
+        </section>
+      )}
+
+      {/* 로딩 상태 */}
+      {isConverting && (
+        <div className="no-print w-full mt-12">
+          <LoadingSpinner />
         </div>
-      </div>
-    </section>
+      )}
+
+      {/* 미리보기 패널 */}
+      {status === 'success' && pageData && (
+        <section className="w-full flex flex-col items-center mt-12 px-4">
+          <PreviewPanel pageData={pageData} onReset={reset} />
+        </section>
+      )}
+    </div>
   );
 }
